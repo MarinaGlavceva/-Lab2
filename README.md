@@ -213,7 +213,7 @@ active (running)
 
 ---
 
-## ** Задание 6a — Развёртывание статического сайта**
+## **Задание 6a — Развёртывание статического сайта**
 
 1. Создала файлы:
 
@@ -321,7 +321,7 @@ aws ec2 stop-instances --instance-ids i-03ee2abb6e102d247
 
 ---
 
-# **5. Список использованных источников**
+# **3. Список использованных источников**
 
 1. AWS Documentation — [https://docs.aws.amazon.com](https://docs.aws.amazon.com)
 2. Руководство Amazon EC2 — [https://docs.aws.amazon.com/ec2/](https://docs.aws.amazon.com/ec2/)
@@ -329,7 +329,7 @@ aws ec2 stop-instances --instance-ids i-03ee2abb6e102d247
 
 ---
 
-# **6. Вывод**
+# **4. Вывод**
 
 В ходе лабораторной работы я:
 
