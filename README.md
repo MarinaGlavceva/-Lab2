@@ -59,11 +59,238 @@
 Даёт полный доступ ко всем сервисам AWS.
 4. Создала IAM-пользователя **cloudstudent**, разрешила вход в консоль. <img width="1553" height="107" alt="Image" src="https://github.com/user-attachments/assets/1db645d3-ec22-4efb-bbad-a2730c0d446c" />
 5. Вышла из root-аккаунта и вошла под IAM-пользователем.
+---
 
-**Скрин:**
-– IAM группа
-– Политика
-– Созданный пользователь
-– Успешный вход
+## **2.3. Задание 2 — Создание Zero Spend Budget**
+
+1. Открыла Billing → Budgets.
+2. Выбрала тип **Zero-spend budget**.
+3. Настроила email-уведомления.
+4. Создала бюджет.
+
+**Скрин:** страница созданного бюджета.
 
 ---
+
+## **4.4. Задание 3 — Создание и запуск EC2 инстанса**
+
+1. EC2 → Launch Instance.
+
+2. Name: **webserver**
+
+3. AMI: **Amazon Linux 2023**
+
+4. Instance type: **t3.micro**
+
+5. Создала ключ **marina-keypair.pem**
+
+6. Создала security group:
+
+   * SSH: My IP
+   * HTTP: 0.0.0.0/0
+
+7. Вставила User Data:
+
+```
+#!/bin/bash
+dnf -y update
+dnf -y install htop
+dnf -y install nginx
+systemctl enable nginx
+systemctl start nginx
+```
+
+**Ответ: зачем User Data?**
+User Data позволяет выполнять команды автоматически при первом запуске виртуальной машины (применяется для автоматизации настройки).
+
+**Ответ: зачем nginx?**
+Это веб-сервер, который обслуживает HTTP-запросы.
+
+**Скрин:**
+– параметры Launch Instance
+– статус Running
+– Public IP
+– страница Welcome to nginx
+
+---
+
+## **4.5. Задание 4 — Логирование и мониторинг**
+
+Открыла вкладки:
+
+* Status checks: оба Passed (2/2).
+* Monitoring: просмотр метрик CloudWatch.
+* System Log: увидела строки установки nginx.
+* Instance Screenshot: загрузочный лог ОС.
+
+**Ответ: когда нужен detailed monitoring?**
+Когда важно получать метрики каждую минуту: высокие нагрузки, продакшн, диагностика задержек.
+
+**Скрин:** Status checks, Monitoring, System Log, Screenshot.
+
+---
+
+## **4.6. Задание 5 — Подключение по SSH**
+
+### На локальной машине:
+
+```
+ssh -i marina-keypair.pem ec2-user@<IP>
+```
+
+Убедилась, что подключение успешно.
+
+**Проверка nginx:**
+
+```
+systemctl status nginx
+```
+
+**Ответ: почему нельзя использовать пароль для SSH в AWS?**
+Пароль легко перебрать.
+SSH-ключи намного безопаснее и сложнее взломать.
+
+**Скрин:** успешное подключение.
+
+---
+
+## **4.7. Задание 6a — Развёртывание статического сайта**
+
+1. Создала файлы:
+
+* index.html
+* about.html
+* contact.html
+
+2. Скопировала на сервер:
+
+```
+scp -i marina-keypair.pem index.html ec2-user@IP:/tmp
+scp -i marina-keypair.pem about.html ec2-user@IP:/tmp
+scp -i marina-keypair.pem contact.html ec2-user@IP:/tmp
+```
+
+3. На сервере переместила:
+
+```
+sudo cp /tmp/*.html /usr/share/nginx/html/
+```
+
+4. Проверила в браузере:
+
+```
+http://IP
+```
+
+**Скрин:** твой сайт работает.
+
+---
+
+## **4.8. Задание 6b — Развёртывание сайта на PHP**
+
+1. Создала структуру php-site с файлами:
+
+* index.php
+* about.php
+* contact.php
+
+2. Скопировала:
+
+```
+scp -i marina-keypair.pem -r php-site/* ec2-user@IP:/tmp
+```
+
+3. На сервере:
+
+```
+sudo cp /tmp/*.php /usr/share/nginx/html/
+```
+
+4. Установила PHP:
+
+```
+sudo dnf -y install php php-fpm
+sudo systemctl enable php-fpm
+sudo systemctl start php-fpm
+```
+
+5. Создала конфиг mywebsite.conf и загрузила в:
+
+```
+/etc/nginx/conf.d/
+```
+
+6. Проверила:
+
+```
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
+7. Открыла сайт:
+
+```
+http://IP/index.php
+```
+
+**Скрин:** твоя PHP-страница работает.
+
+---
+
+# **4.9. Задание 7 — Остановка EC2 через CLI**
+
+### Подключилась в AWS CloudShell
+
+Выполнила команду:
+
+```
+aws ec2 stop-instances --instance-ids i-03ee2abb6e102d247
+```
+
+### Ответ: чем Stop отличается от Terminate?
+
+| Stop                             | Terminate                     |
+| -------------------------------- | ----------------------------- |
+| Инстанс останавливается          | Инстанс удаляется навсегда    |
+| Можно запустить снова            | Запустить снова невозможно    |
+| Диск EBS сохраняется             | Диск EBS удаляется            |
+| Деньги за compute не списываются | Ресурс полностью уничтожается |
+
+**Скрин:** CloudShell + успешная остановка.
+
+---
+
+# **5. Список использованных источников**
+
+1. AWS Documentation — [https://docs.aws.amazon.com](https://docs.aws.amazon.com)
+2. Руководство Amazon EC2 — [https://docs.aws.amazon.com/ec2/](https://docs.aws.amazon.com/ec2/)
+3. Учебные материалы по AWS (предоставленные преподавателем)
+
+---
+
+# **6. Вывод**
+
+В ходе лабораторной работы я:
+
+* Создала IAM-пользователя и группу.
+* Настроила бюджет для защиты от расходов.
+* Запустила виртуальную машину EC2 и автоматически настроила её через User Data.
+* Установила и проверила работу веб-сервера Nginx.
+* Подключилась по SSH с использованием ключей.
+* Развернула статический сайт и сайт на PHP.
+* Освоила работу с CloudWatch и логами.
+* Остановила EC2 через командную строку.
+
+Получены ключевые навыки по работе с AWS, достаточные для развёртывания базового веб-приложения в облаке.
+
+---
+
+Если хочешь — я могу:
+
+✅ собрать тебе **готовый PDF**
+или
+✅ оформить всё в **README.md** с моим дизайном
+или
+✅ добавить твои скриншоты прямо в отчёт
+
+Скажи, какой вариант нужен?
