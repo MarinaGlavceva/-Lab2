@@ -68,28 +68,30 @@
 3. Настроила email-уведомления.
 4. Создала бюджет.
 
-**Скрин:** страница созданного бюджета.
+<img width="1564" height="709" alt="Image" src="https://github.com/user-attachments/assets/519ea0f5-4ec6-45d9-a5a6-4a9eac715f57" />
 
 ---
 
-## **4.4. Задание 3 — Создание и запуск EC2 инстанса**
+## **2.4. Задание 3 — Создание и запуск EC2 инстанса**
 
-1. EC2 → Launch Instance.
+1. В разделе **Instances → Launch instances** начато создание новой виртуальной машины.
 
-2. Name: **webserver**
+Были выбраны параметры:
 
-3. AMI: **Amazon Linux 2023**
+- **Name:** `webserver`
+- **AMI:** Amazon Linux 2023 AMI  
+- **Instance type:** `t3.micro` (Free Tier)
+- **Key pair:** создан новый ключ  
+  - название: `marina-keypair`
+  - тип: RSA  
+  - формат: `.pem`
 
-4. Instance type: **t3.micro**
-
-5. Создала ключ **marina-keypair.pem**
-
-6. Создала security group:
+ 2. Создала security group:
 
    * SSH: My IP
    * HTTP: 0.0.0.0/0
 
-7. Вставила User Data:
+3. Вставила User Data:
 
 ```
 #!/bin/bash
