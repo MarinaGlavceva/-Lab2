@@ -145,8 +145,9 @@ Instance reachability check — Passed
 
 Через Actions → Monitor and troubleshoot → Get instance screenshot получила снимок виртуальной консоли.
 На нём видно, что сервер успешно загрузился в Amazon Linux.
+
 <img width="862" height="761" alt="Image" src="https://github.com/user-attachments/assets/305d5497-cc0b-43ed-8789-d32689d3373c" />
----
+
 ---
 
 ## **Задание 5 — Подключение по SSH**
@@ -211,9 +212,6 @@ active (running)
 
 ---
 
-
----
-
 ## **4.7. Задание 6a — Развёртывание статического сайта**
 
 1. Создала файлы:
@@ -229,6 +227,7 @@ scp -i marina-keypair.pem index.html ec2-user@IP:/tmp
 scp -i marina-keypair.pem about.html ec2-user@IP:/tmp
 scp -i marina-keypair.pem contact.html ec2-user@IP:/tmp
 ```
+<img width="962" height="251" alt="Image" src="https://github.com/user-attachments/assets/2e9cd652-f4ae-4f21-9823-83cfc44828a3" />
 
 3. На сервере переместила:
 
@@ -242,7 +241,7 @@ sudo cp /tmp/*.html /usr/share/nginx/html/
 http://IP
 ```
 
-**Скрин:** твой сайт работает.
+<img width="962" height="554" alt="Image" src="https://github.com/user-attachments/assets/34cf5ea0-83fe-494a-96df-fd7a6a5c67d1" />
 
 ---
 
